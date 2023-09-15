@@ -15,6 +15,7 @@ public class RequestResponseHandler {
     private static RequestResponseHandler requestResponseHandler;
     private final Gson gson;
     private final Random random;
+    private final int bufferSize = 8192;
 
     public static synchronized RequestResponseHandler getRequestResponseHandler() {
         if (requestResponseHandler == null) {
@@ -29,8 +30,7 @@ public class RequestResponseHandler {
     }
 
     public Map<String, Object> jsonToMap(String input) {
-        Type type = new TypeToken<HashMap<String, Object>>() {
-        }.getType();
+        Type type = new TypeToken<HashMap<String, Object>>() {}.getType();
         return gson.fromJson(input, type);
     }
 
@@ -44,19 +44,25 @@ public class RequestResponseHandler {
         return jsonToMap(response.toString());
     }
 
-    private static StringBuilder getResponse(String urlRequest) {
-        StringBuilder response = new StringBuilder();
+    private StringBuilder getResponse(String urlRequest) {
+        StringBuilder response = new StringBuilder(bufferSize);
         URL url = null;
+        HttpURLConnection connection = null;
         try {
             url = new URL(urlRequest);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Accept-Encoding", "gzip");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), bufferSize);
             String line;
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
         return response;
     }
@@ -64,7 +70,7 @@ public class RequestResponseHandler {
     public List<String> getSentences() {
         List<Map<String, Object>> results = (List<Map<String, Object>>) getFullResponseMap().get("results");
         int randomSentenceIndex = Integer.parseInt(getRandom(10)) - 1;
-        List<String> sentences = new ArrayList<>();
+        List<String> sentences = new ArrayList<>(results.size());
         sentences.add(results.get(randomSentenceIndex).get("text").toString());
         List<List<Map<String, Object>>> allTranslations =
                 (List<List<Map<String, Object>>>) results.get(randomSentenceIndex).get("translations");
@@ -74,6 +80,8 @@ public class RequestResponseHandler {
                 sentences.add(allTranslation.get(0).get("text").toString());
             }
         }
+        allTranslations = null;
+        System.gc();
         return sentences;
     }
 

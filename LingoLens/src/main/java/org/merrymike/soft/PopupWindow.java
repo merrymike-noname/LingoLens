@@ -8,10 +8,15 @@ public class PopupWindow {
 
     private final RequestResponseHandler requestResponseHandler = RequestResponseHandler.getRequestResponseHandler();
     private List<String> sentencesList;
-    private final JFrame frame = new JFrame();
+    private final JFrame frame;
     private final int windowWidth = 350;
     private final int windowHeight = 150;
-    private PopupTimer popupTimer = PopupTimer.getPopupTimer();
+    private final PopupTimer popupTimer = PopupTimer.getPopupTimer();
+    private final Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
+
+    public PopupWindow() {
+        frame = new JFrame();
+    }
 
     public void showPopupWindow() {
         frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
@@ -24,7 +29,6 @@ public class PopupWindow {
 
         sentencesList = requestResponseHandler.getSentences();
         JDialog popup = new JDialog(frame, "LingoLens", Dialog.ModalityType.APPLICATION_MODAL);
-        Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
         popup.setIconImage(image);
         popup.setLocationRelativeTo(frame);
         popup.setResizable(false);
@@ -54,12 +58,14 @@ public class PopupWindow {
         JButton closeButton = new JButton("x");
         closeButton.addActionListener(e -> {
             popup.dispose();
+            System.gc();
             popupTimer.startPopupTimer(15);
         });
 
         JButton nextButton = new JButton(">");
         nextButton.addActionListener(e -> {
             popup.dispose();
+            System.gc();
             showPopupWindow();
         });
 

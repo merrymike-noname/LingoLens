@@ -1,13 +1,16 @@
 package org.merrymike.soft;
 
 import javax.swing.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class PopupTimer {
     private static PopupTimer popupTimer;
     private Timer timer;
-    private int countdown;
+    private final AtomicInteger countdown = new AtomicInteger();
+    private Consumer<String> updateListener;
 
-    public PopupTimer() {
+    private PopupTimer() {
     }
 
     public static synchronized PopupTimer getPopupTimer() {
@@ -21,15 +24,20 @@ public class PopupTimer {
         if (timer != null && timer.isRunning()) {
             timer.stop();
         }
-        countdown = minutes * 60;
+        countdown.set(minutes * 60);
+
         timer = new Timer(1000, e -> {
-            countdown--;
-            if (countdown <= 0) {
+            int remainingTime = countdown.decrementAndGet();
+            if (remainingTime <= 0) {
                 timer.stop();
                 PopupWindow popupWindow = new PopupWindow();
                 popupWindow.showPopupWindow();
             }
-            //System.out.println(showRemainingTime());
+            String formattedTime = showRemainingTime();
+            if (updateListener != null) {
+                updateListener.accept(formattedTime);
+            }
+            //System.out.println(formattedTime);
         });
         timer.start();
     }
@@ -41,9 +49,12 @@ public class PopupTimer {
     }
 
     public synchronized String showRemainingTime() {
-        int minutes = countdown / 60;
-        int seconds = countdown % 60;
-        return minutes + ":" + seconds;
+        int minutes = countdown.get() / 60;
+        int seconds = countdown.get() % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
+    public void addUpdateListener(Consumer<String> listener) {
+        updateListener = listener;
+    }
 }

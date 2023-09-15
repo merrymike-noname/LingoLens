@@ -1,12 +1,11 @@
 package org.merrymike.soft;
 
 import java.awt.*;
-import javax.swing.*;
 
 public class TrayIconHandler {
     private static TrayIconHandler trayIconHandler;
     private final PopupTimer popupTimer = PopupTimer.getPopupTimer();
-    private Timer timer;
+    private final Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
 
     private TrayIconHandler() {
     }
@@ -19,7 +18,6 @@ public class TrayIconHandler {
     }
 
     public TrayIcon getTrayIcon() {
-        Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
         PopupMenu popupMenu = new PopupMenu();
         MenuItem showSentence = getShowSentence();
         MenuItem exit = getExit();
@@ -33,10 +31,7 @@ public class TrayIconHandler {
 
     private synchronized MenuItem getRemainingTime() {
         MenuItem remainingTime = new MenuItem(popupTimer.showRemainingTime());
-        timer = new Timer(1000, a -> {
-            remainingTime.setLabel(popupTimer.showRemainingTime());
-        });
-        timer.start();
+        popupTimer.addUpdateListener(remainingTime::setLabel);
         return remainingTime;
     }
 
@@ -45,6 +40,7 @@ public class TrayIconHandler {
         showSentence.addActionListener(e -> {
             PopupWindow popupWindow = new PopupWindow();
             popupWindow.showPopupWindow();
+            System.gc();
         });
         return showSentence;
     }
