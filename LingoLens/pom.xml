@@ -20,6 +20,12 @@
             <artifactId>gson</artifactId>
             <version>2.9.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.pushing-pixels</groupId>
+            <artifactId>radiance-substance</artifactId>
+            <version>4.5.0</version>
+        </dependency>
     </dependencies>
 
 </project>

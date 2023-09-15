@@ -28,14 +28,14 @@ public class PopupTimer {
 
         timer = new Timer(1000, e -> {
             int remainingTime = countdown.decrementAndGet();
+            String formattedTime = showRemainingTime();
+            if (updateListener != null) {
+                updateListener.accept(formattedTime);
+            }
             if (remainingTime <= 0) {
                 timer.stop();
                 PopupWindow popupWindow = new PopupWindow();
                 popupWindow.showPopupWindow();
-            }
-            String formattedTime = showRemainingTime();
-            if (updateListener != null) {
-                updateListener.accept(formattedTime);
             }
             //System.out.println(formattedTime);
         });

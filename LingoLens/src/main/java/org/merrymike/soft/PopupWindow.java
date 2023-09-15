@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import org.pushingpixels.substance.api.skin.SubstanceGraphiteElectricLookAndFeel;
+
 public class PopupWindow {
 
     private final RequestResponseHandler requestResponseHandler = RequestResponseHandler.getRequestResponseHandler();
@@ -19,14 +21,15 @@ public class PopupWindow {
     }
 
     public void showPopupWindow() {
-        frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        JFrame.setDefaultLookAndFeelDecorated(true);
-//        try {
-//            UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel");
-//        } catch (Exception e) {
-//            System.out.println("Substance Graphite failed to initialize");
-//        }
 
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        try {
+            UIManager.setLookAndFeel(new SubstanceGraphiteElectricLookAndFeel());
+        } catch (Exception e) {
+            System.out.println("Substance error");
+        }
+
+        frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
         sentencesList = requestResponseHandler.getSentences();
         JDialog popup = new JDialog(frame, "LingoLens", Dialog.ModalityType.APPLICATION_MODAL);
         popup.setIconImage(image);
@@ -59,7 +62,7 @@ public class PopupWindow {
         closeButton.addActionListener(e -> {
             popup.dispose();
             System.gc();
-            popupTimer.startPopupTimer(15);
+            popupTimer.startPopupTimer(20);
         });
 
         JButton nextButton = new JButton(">");
