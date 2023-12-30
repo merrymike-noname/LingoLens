@@ -41,16 +41,29 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org/merrymike/soft/Controller</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>org.merrymike.soft.Controller</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>LingoLens</finalName>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
 
 
 </project>

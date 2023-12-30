@@ -138,7 +138,6 @@ public class SettingsWindow extends JFrame {
                 properties.store(fos, "");
             } catch (IOException e) {
                 e.printStackTrace();
-                // Обработка ошибок записи в файл
             }
             dispose();
         }

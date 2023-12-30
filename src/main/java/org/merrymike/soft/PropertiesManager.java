@@ -7,7 +7,7 @@ import java.util.Properties;
 public class PropertiesManager extends Properties{
     private static final Properties properties = new Properties();
     static {
-        try (InputStream input = PropertiesManager.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream input = PropertiesManager.class.getResourceAsStream("/application.properties")) {
             if (input == null) {
                 throw new RuntimeException("Unable to find application.properties");
             }
