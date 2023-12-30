@@ -2,52 +2,27 @@ package org.merrymike.soft;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
 
 import org.pushingpixels.substance.api.skin.SubstanceGraphiteElectricLookAndFeel;
 
 public class PopupWindow {
 
     private final SentenceGenerator sentenceGenerator = new SentenceGenerator();
-    private final Properties properties = new Properties();
     private List<String> sentencesList;
-    private final JFrame frame;
+    private final JDialog popup;
     private final PopupTimer popupTimer = PopupTimer.getPopupTimer();
-    private final Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
 
     public PopupWindow() {
-        frame = new JFrame();
-        try {
-            properties.load(new FileInputStream(Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
-                    .getResource("")).getPath() + "application.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        showPopupWindow();
-    }
-
-    public void showPopupWindow() {
-        SwingUtilities.invokeLater(() -> {
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        try {
-            UIManager.setLookAndFeel(new SubstanceGraphiteElectricLookAndFeel());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JFrame frame = new JFrame();
+        popup = new JDialog(frame, "LingoLens", Dialog.ModalityType.APPLICATION_MODAL);
+        Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
+        popup.setIconImage(image);
+        popup.setResizable(false);
 
         int windowWidth = 350;
         int windowHeight = 150;
-        frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        sentencesList = sentenceGenerator.getSentences();
-        JDialog popup = new JDialog(frame, "LingoLens", Dialog.ModalityType.APPLICATION_MODAL);
-        popup.setIconImage(image);
-        popup.setLocationRelativeTo(frame);
-        popup.setResizable(false);
-
+        popup.setPreferredSize(new Dimension(windowWidth, windowHeight));
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         int screenWidth = (int) screenSize.getWidth();
@@ -57,14 +32,30 @@ public class PopupWindow {
         popup.setBounds(windowX, windowY, windowWidth, windowHeight);
         popup.setUndecorated(true);
 
-        JPanel panel = getjPanel(popup);
+        showPopupWindow();
+    }
 
-        popup.add(panel);
-        popup.setVisible(true);
+    public void showPopupWindow() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame.setDefaultLookAndFeelDecorated(true);
+            try {
+                UIManager.setLookAndFeel(new SubstanceGraphiteElectricLookAndFeel());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            sentencesList = sentenceGenerator.getSentences();
+            JPanel panel = getjPanel();
+
+            popup.getContentPane().removeAll();
+            popup.add(panel);
+            popup.revalidate();
+            popup.repaint();
+            popup.setVisible(true);
         });
     }
 
-    private JPanel getjPanel(JDialog popup) {
+    private JPanel getjPanel() {
         popupTimer.stopPopupTimer();
         JLabel sentenceLabel = new JLabel(getSentence());
         sentenceLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -84,7 +75,7 @@ public class PopupWindow {
         nextButton.addActionListener(e -> {
             popup.dispose();
             System.gc();
-            new PopupWindow();
+            showPopupWindow();
         });
 
         JPanel panel = new JPanel();
