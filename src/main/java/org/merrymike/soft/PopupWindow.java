@@ -2,22 +2,31 @@ package org.merrymike.soft;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 
 import org.pushingpixels.substance.api.skin.SubstanceGraphiteElectricLookAndFeel;
 
 public class PopupWindow {
 
-    private final RequestResponseHandler requestResponseHandler = RequestResponseHandler.getRequestResponseHandler();
+    private final SentenceGenerator sentenceGenerator = SentenceGenerator.getSentenceGenerator();
+    private final Properties properties = new Properties();
     private List<String> sentencesList;
     private final JFrame frame;
-    private final int windowWidth = 350;
-    private final int windowHeight = 150;
     private final PopupTimer popupTimer = PopupTimer.getPopupTimer();
     private final Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
 
     public PopupWindow() {
         frame = new JFrame();
+        try {
+            properties.load(new FileInputStream(Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
+                    .getResource("")).getPath() + "application.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void showPopupWindow() {
@@ -29,8 +38,10 @@ public class PopupWindow {
             System.out.println("Substance error");
         }
 
+        int windowWidth = 350;
+        int windowHeight = 150;
         frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        sentencesList = requestResponseHandler.getSentences();
+        sentencesList = sentenceGenerator.getSentences();
         JDialog popup = new JDialog(frame, "LingoLens", Dialog.ModalityType.APPLICATION_MODAL);
         popup.setIconImage(image);
         popup.setLocationRelativeTo(frame);
@@ -59,13 +70,15 @@ public class PopupWindow {
         translationLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
         JButton closeButton = new JButton("x");
+        closeButton.setFocusable(false);
         closeButton.addActionListener(e -> {
             popup.dispose();
             System.gc();
-            popupTimer.startPopupTimer(20);
+            popupTimer.startPopupTimer();
         });
 
         JButton nextButton = new JButton(">");
+        nextButton.setFocusable(false);
         nextButton.addActionListener(e -> {
             popup.dispose();
             System.gc();

@@ -11,7 +11,7 @@ public class Controller {
         if (SystemTray.isSupported()) {
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIconHandler.getTrayIcon());
-            popupTimer.startPopupTimer(20);
+            popupTimer.startPopupTimer();
         }
     }
 }

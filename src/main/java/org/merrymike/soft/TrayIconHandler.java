@@ -5,7 +5,7 @@ import java.awt.*;
 public class TrayIconHandler {
     private static TrayIconHandler trayIconHandler;
     private final PopupTimer popupTimer = PopupTimer.getPopupTimer();
-    private final Image image = Toolkit.getDefaultToolkit().getImage("icon.ico");
+    private final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("icon.png"));
 
     private TrayIconHandler() {
     }
@@ -26,7 +26,9 @@ public class TrayIconHandler {
         popupMenu.add(remainingTime);
         popupMenu.addSeparator();
         popupMenu.add(exit);
-        return new TrayIcon(image, "LingoLens", popupMenu);
+        TrayIcon trayIcon = new TrayIcon(image, "LingoLens", popupMenu);
+        trayIcon.setImageAutoSize(true);
+        return trayIcon;
     }
 
     private synchronized MenuItem getRemainingTime() {
