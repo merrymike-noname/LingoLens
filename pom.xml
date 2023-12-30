@@ -6,7 +6,7 @@
 
     <groupId>org.merrymike.soft</groupId>
     <artifactId>LingoLens</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -25,6 +25,18 @@
             <groupId>org.pushing-pixels</groupId>
             <artifactId>radiance-substance</artifactId>
             <version>4.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
         </dependency>
     </dependencies>
 
