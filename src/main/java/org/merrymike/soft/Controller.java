@@ -7,12 +7,12 @@ public class Controller {
     private static final PopupTimer popupTimer = PopupTimer.getPopupTimer();
 
     public static void main(String[] args) throws AWTException {
-        TrayIconHandler trayIconHandler = TrayIconHandler.getTreyIconHandler();
+        TrayIconHandler trayIconHandler = new TrayIconHandler();
         if (SystemTray.isSupported()) {
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIconHandler.getTrayIcon());
-            PopupWindow popupWindow = new PopupWindow();
-            popupWindow.showPopupWindow();
+            new PopupWindow();
+            //popupWindow.showPopupWindow();
             popupTimer.startPopupTimer();
         }
     }

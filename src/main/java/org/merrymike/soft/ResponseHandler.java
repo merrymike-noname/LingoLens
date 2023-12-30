@@ -11,20 +11,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class ResponseHandler {
-    private static ResponseHandler responseHandler;
     private final Properties properties = PropertiesManager.getProperties();
     private final Random random = new Random();
-
-    public static synchronized ResponseHandler getResponseHandler() {
-        if (responseHandler == null) {
-            responseHandler = new ResponseHandler();
-        }
-        return responseHandler;
-    }
-
-    private ResponseHandler(){
-
-    }
 
     private int getRandom(int min, int max) {
         return random.nextInt(max - min + 1) + min;

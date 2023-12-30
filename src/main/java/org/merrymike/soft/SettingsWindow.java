@@ -33,8 +33,7 @@ public class SettingsWindow extends JFrame {
 
     public SettingsWindow() {
         setTitle("Settings");
-            setLocationRelativeTo(null);
-            setResizable(false);
+        setResizable(false);
 
         SwingUtilities.invokeLater(() -> {
             setDefaultLookAndFeelDecorated(true);
@@ -117,6 +116,7 @@ public class SettingsWindow extends JFrame {
         add(contentPanel);
 
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -142,6 +142,6 @@ public class SettingsWindow extends JFrame {
             }
             dispose();
         }
-
     }
+
 }

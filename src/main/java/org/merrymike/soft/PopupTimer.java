@@ -38,8 +38,7 @@ public class PopupTimer {
             }
             if (remainingTime <= 0) {
                 timer.stop();
-                PopupWindow popupWindow = new PopupWindow();
-                popupWindow.showPopupWindow();
+                new PopupWindow();
             }
             //System.out.println(formattedTime);
         });

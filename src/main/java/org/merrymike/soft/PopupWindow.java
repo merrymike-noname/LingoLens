@@ -12,7 +12,7 @@ import org.pushingpixels.substance.api.skin.SubstanceGraphiteElectricLookAndFeel
 
 public class PopupWindow {
 
-    private final SentenceGenerator sentenceGenerator = SentenceGenerator.getSentenceGenerator();
+    private final SentenceGenerator sentenceGenerator = new SentenceGenerator();
     private final Properties properties = new Properties();
     private List<String> sentencesList;
     private final JFrame frame;
@@ -27,6 +27,7 @@ public class PopupWindow {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        showPopupWindow();
     }
 
     public void showPopupWindow() {
@@ -83,7 +84,7 @@ public class PopupWindow {
         nextButton.addActionListener(e -> {
             popup.dispose();
             System.gc();
-            showPopupWindow();
+            new PopupWindow();
         });
 
         JPanel panel = new JPanel();
