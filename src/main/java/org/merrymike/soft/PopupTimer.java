@@ -1,27 +1,18 @@
 package org.merrymike.soft;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class PopupTimer {
     private static PopupTimer popupTimer;
-    private final Properties properties = new Properties();
+    private final Properties properties = PropertiesManager.getProperties();
     private Timer timer;
     private final AtomicInteger countdown = new AtomicInteger();
     private Consumer<String> updateListener;
 
     private PopupTimer() {
-        try {
-            properties.load(new FileInputStream(Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
-                    .getResource("")).getPath() + "application.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static synchronized PopupTimer getPopupTimer() {

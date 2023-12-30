@@ -30,12 +30,12 @@ public class PopupWindow {
     }
 
     public void showPopupWindow() {
-
+        SwingUtilities.invokeLater(() -> {
         JFrame.setDefaultLookAndFeelDecorated(true);
         try {
             UIManager.setLookAndFeel(new SubstanceGraphiteElectricLookAndFeel());
         } catch (Exception e) {
-            System.out.println("Substance error");
+            e.printStackTrace();
         }
 
         int windowWidth = 350;
@@ -60,6 +60,7 @@ public class PopupWindow {
 
         popup.add(panel);
         popup.setVisible(true);
+        });
     }
 
     private JPanel getjPanel(JDialog popup) {

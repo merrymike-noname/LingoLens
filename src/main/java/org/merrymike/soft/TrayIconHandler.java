@@ -20,15 +20,27 @@ public class TrayIconHandler {
     public TrayIcon getTrayIcon() {
         PopupMenu popupMenu = new PopupMenu();
         MenuItem showSentence = getShowSentence();
-        MenuItem exit = getExit();
         MenuItem remainingTime = getRemainingTime();
+        MenuItem settings = getSettings();
+        MenuItem exit = getExit();
         popupMenu.add(showSentence);
         popupMenu.add(remainingTime);
+        popupMenu.add(settings);
         popupMenu.addSeparator();
         popupMenu.add(exit);
         TrayIcon trayIcon = new TrayIcon(image, "LingoLens", popupMenu);
+        trayIcon.addActionListener(e -> {
+            PopupWindow popupWindow = new PopupWindow();
+            popupWindow.showPopupWindow();
+        });
         trayIcon.setImageAutoSize(true);
         return trayIcon;
+    }
+
+    private MenuItem getSettings() {
+        MenuItem settings = new MenuItem("Settings");
+        settings.addActionListener(e -> new SettingsWindow());
+        return settings;
     }
 
     private synchronized MenuItem getRemainingTime() {
